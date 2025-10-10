@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E - Krathong KKU by SIDS - เว็บกระทงออนไลน์ by SIDS KKU</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
+        
+        body {
+        font-family: 'Kanit', sans-serif;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #1e3a5f 75%, #164e63 100%);
+        background-attachment: fixed;
+        color: white;
+        }
+        
+        .krathong-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .water-ripple {
+            background: linear-gradient(45deg, #1e3a8a, #1e40af, #3b82f6, #60a5fa);
+            background-size: 400% 400%;
+            animation: ripple 4s ease-in-out infinite;
+        }
+        
+            .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #1e3a5f 75%, #164e63 100%);
+            padding: 2rem;
+            border-radius: 24px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .krathong-customizer {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .color-picker-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .color-option {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: white;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .ad-zone{position:fixed; top:180px; width:180px; height:220px; background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border-radius:12px; display:flex; align-items:center; justify-content:center; text-align:center; padding:12px; color:#cfeffd; border:1px dashed rgba(255,255,255,0.06); z-index:40; animation:adPulse 3.5s ease-in-out infinite;}
+        .ad-left{left:18px;}
+        .ad-right{right:18px;}
+        @keyframes adPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
+            50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+        }
+        @media (max-width: 768px) {
+            .krathong-customizer {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @keyframes ripple {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .candle-glow {
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.6);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(249, 115, 22, 0.6); }
+            to { box-shadow: 0 0 30px rgba(251, 146, 60, 0.8); }
+        }
+        
+        .water-surface {
+            background: linear-gradient(45deg, #0a1929, #1a2332, #1e3a5f, #1a4d6b, #134e5e);
+            background-size: 400% 400%;
+            animation: waterFlow 6s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 50px rgba(15, 23, 42, 0.8);
+        }
+        
+        @keyframes waterFlow {
+            0%, 100% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 50% 100%; }
+            75% { background-position: 100% 0%; }
+        }
+        
+        .water-surface::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        background: 
+            radial-gradient(ellipse at 50% 15%, rgba(253, 224, 71, 0.15) 0%, transparent 25%),
+            radial-gradient(circle at 20% 30%, rgba(148, 163, 184, 0.2) 2px, transparent 2px),
+            radial-gradient(circle at 60% 70%, rgba(148, 163, 184, 0.15) 1px, transparent 1px),
+            radial-gradient(circle at 80% 20%, rgba(148, 163, 184, 0.25) 1.5px, transparent 1.5px),
+            radial-gradient(ellipse 200px 100px at 50% 10%, rgba(253, 224, 71, 0.08) 0%, transparent 50%);
+        animation: sparkle 3s ease-in-out infinite, moonGlow 4s ease-in-out infinite alternate;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes moonGlow {
+            0% { 
+                filter: brightness(1);
+            }
+            100% { 
+                filter: brightness(1.2);
+            }
+        }
+
+        .community-krathong {
+            position: absolute;
+            animation: communityFloat 15s linear infinite;
+            z-index: 5;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .community-krathong:hover {
+            transform: scale(1.2);
+            z-index: 15;
+        }
+        
+        @keyframes communityFloat {
+            0% {
+                transform: translateX(-100px) translateY(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) translateY(-20px) rotate(10deg);
+                opacity: 0;
+            }
+        }
+        
+        .community-krathong-1 {
+            animation-duration: 18s;
+            animation-delay: 0s;
+        }
+        
+        .community-krathong-2 {
+            animation-duration: 22s;
+            animation-delay: 3s;
+        }
+        
+        .community-krathong-3 {
+            animation-duration: 16s;
+            animation-delay: 6s;
+        }
+        
+        .community-krathong-4 {
+            animation-duration: 20s;
+            animation-delay: 9s;
+        }
+        
+        .community-krathong-5 {
+            animation-duration: 19s;
+            animation-delay: 12s;
+        }
+        
+        .krathong-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 20;
+        }
+        
+        .community-krathong:hover .krathong-tooltip {
+            opacity: 1;
+        }
+        
+        .candle-flicker {
+            position: relative;
+        }
+        
+        .candle-flicker::after {
+            content: '🕯️';
+            position: absolute;
+            top: -10px;
+            right: -5px;
+            font-size: 0.8em;
+            animation: flicker 1.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes flicker {
+            0% { 
+                opacity: 0.8;
+                transform: scale(1) rotate(-2deg);
+                filter: brightness(1);
+            }
+            25% { 
+                opacity: 1;
+                transform: scale(1.1) rotate(1deg);
+                filter: brightness(1.2);
+            }
+            50% { 
+                opacity: 0.9;
+                transform: scale(0.95) rotate(-1deg);
+                filter: brightness(0.9);
+            }
+            75% { 
+                opacity: 1;
+                transform: scale(1.05) rotate(2deg);
+                filter: brightness(1.1);
+            }
+            100% { 
+                opacity: 0.85;
+                transform: scale(1) rotate(0deg);
+                filter: brightness(1);
+            }
+        }
+        
+        .release-button {
+            background: linear-gradient(45deg, #f59e0b, #f97316, #fb923c);
+            background-size: 200% 200%;
+            animation: buttonGlow 2s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+        
+        .release-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.4);
+        }
+        
+        @keyframes buttonGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .water-ripples {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .ripple {
+            position: absolute;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: rippleEffect 2s ease-out forwards;
+        }
+        
+        @keyframes rippleEffect {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+            100% {
+                width: 100px;
+                height: 100px;
+                opacity: 0;
+            }
+        }
+        
+        .floating-notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: slideInRight 0.5s ease-out, slideOutRight 0.5s ease-in 3s forwards;
+            max-width: 300px;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes floatAway {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-50%, -80%) scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -150%) scale(0.5);
+                opacity: 0;
+            }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #f59e0b 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(192, 38, 211, 0.3);
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #c026d3;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes slideInNew {
+            from {
+                opacity: 0;
+                transform: translateX(-30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        .glass-effect {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+      <!-- Advert zones -->
+  <div class="ad-zone ad-left">
+    <div>
+      <div style="font-weight:700; margin-bottom:6px;">พื้นที่โฆษณา</div>
+      <div style="font-size:13px;">สนับสนุนกิจกรรมลอยกระทงดิจิทัล 💙</div>
+    </div>
+  </div>
+  <div class="ad-zone ad-right">
+    <div>
+      <div style="font-weight:700; margin-bottom:6px;">พื้นที่โฆษณา</div>
+      <div style="font-size:13px;">สร้างรายได้ให้โครงการ</div>
+    </div>
+  </div>
+
+    <!-- Navigation -->
+    <nav class="glass-effect shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-purple-600 to-orange-500 rounded-full flex items-center justify-center">
+                        <span class="text-white text-xl">🎎</span>
+                    </div>
+                    <h1 class="text-xl font-bold text-white">E - Krathong</h1>
+                    <h2 class="text-l font-bold text-purple-100">By KKU SIDS</h2>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#digital-krathong" class="text-white hover:text-orange-300 font-medium transition-colors">ลอยกระทงดิจิทัล</a>
+                    <a href="#community-river" class="text-white hover:text-orange-300 font-medium transition-colors">แม่น้ำชุมชน</a>
+                    <a href="#events" class="text-white hover:text-orange-300 font-medium transition-colors">แผนที่กิจกรรม</a>
+                    <a href="#wishes" class="text-white hover:text-orange-300 font-medium transition-colors">ผนังคำอธิษฐาน</a>
+                    <a href="#gallery" class="text-white hover:text-orange-300 font-medium transition-colors">แกลเลอรี่</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden lg:flex items-center space-x-2 glass-effect px-3 py-2 rounded-lg">
+                        <span class="text-orange-300 text-sm font-semibold">🌱 <span id="nav-waste-count">12,847</span></span>
+                        <span class="text-purple-200">|</span>
+                        <span class="text-purple-300 text-sm font-semibold">💥 <span id="nav-community-count">45,623</span></span>
+                    </div>
+                    <button class="md:hidden p-2 text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative py-20 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-6xl font-bold text-white mb-6">
+                    ลอยกระทง<span class="text-orange-300">รักษ์โลก</span>
+                </h2>
+                <p class="text-xl text-purple-100 mb-8 max-w-3xl mx-auto">
+                    ร่วมสร้างประเพณีลอยกระทงแบบยั่งยืน ด้วยเทคโนโลยีดิจิทัล ลดขยะ รักษาสิ่งแวดล้อม และเชื่อมโยงชุมชนทั่วโลก
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="showDigitalKrathong()" class="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        🎎 เริ่มลอยกระทงดิจิทัล
+                    </button>
+                    <button onclick="showDonation()" class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                        🌱 บริจาครักษ์โลก
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+            <div class="krathong-float absolute top-20 left-10 text-4xl opacity-70">🎎</div>
+            <div class="krathong-float absolute top-32 right-20 text-3xl opacity-60" style="animation-delay: 1s;">🪷</div>
+            <div class="krathong-float absolute top-48 left-1/3 text-2xl opacity-50" style="animation-delay: 2s;">🌸</div>
+        </div>
+    </section>
+
+    <!-- Digital Krathong Section -->
+    <section id="digital-krathong" class="py-16 glass-effect">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-white mb-4">ลอยกระทงดิจิทัล</h3>
+                <p class="text-purple-100 text-lg">สร้างกระทงเสมือนจริงของคุณ ไม่ทำลายธรรมชาติ</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="glass-effect p-8 rounded-2xl">
+                    <h4 class="text-xl font-semibold mb-6 text-center text-white">ออกแบบกระทงของคุณ</h4>
+                    
+                    <div class="water-surface p-8 rounded-2xl mb-6 relative h-64" id="water-container">
+                        <div class="water-ripples" id="ripples-container"></div>
+                        <div class="water-ripples" id="ripples-container"></div>
+                        <div class="absolute top-4 right-8 text-6xl opacity-70" style="filter: drop-shadow(0 0 20px rgba(253, 224, 71, 0.4));">🌕</div>
+                        <div id="krathong-preview" class="bg-gradient-to-br from-yellow-200 to-orange-300 w-32 h-32 mx-auto rounded-full flex items-center justify-center text-4xl krathong-float candle-glow candle-flicker absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            🎎
+                        </div>
+                        
+                        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+                            <button id="release-btn" onclick="releaseKrathong()" class="release-button text-white px-6 py-3 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                                ✨ ปล่อยกระทง ✨
+                            </button>
+                        </div>
+                        
+                        <div id="floating-krathongs" class="absolute inset-0 pointer-events-none"></div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-white mb-2">เลือกแบบกระทง</label>
+                            <div class="grid grid-cols-4 gap-2">
+                                <button onclick="selectKrathong('🎎')" class="krathong-option p-3 text-2xl bg-white/20 rounded-lg hover:bg-orange-200 border-2 border-transparent hover:border-orange-400 transition-all">🎎</button>
+                                <button onclick="selectKrathong('🪷')" class="krathong-option p-3 text-2xl bg-white/20 rounded-lg hover:bg-purple-200 border-2 border-transparent hover:border-purple-400 transition-all">🪷</button>
+                                <button onclick="selectKrathong('🌸')" class="krathong-option p-3 text-2xl bg-white/20 rounded-lg hover:bg-pink-200 border-2 border-transparent hover:border-pink-400 transition-all">🌸</button>
+                                <button onclick="selectKrathong('🌺')" class="krathong-option p-3 text-2xl bg-white/20 rounded-lg hover:bg-orange-200 border-2 border-transparent hover:border-orange-400 transition-all">🌺</button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-white mb-2">ชื่อเจ้าของกระทง</label>
+                            <input type="text" id="owner-name" placeholder="ใส่ชื่อของคุณ..." class="w-full p-3 border border-purple-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white/90 text-gray-900" />
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-white mb-2">คำอธิษฐาน/ข้อความ</label>
+                            <textarea id="wish-text" placeholder="เขียนคำอธิษฐานหรือความปรารถนาของคุณ..." class="w-full p-3 border border-purple-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white/90 text-gray-900" rows="3"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-white mb-2">หมวดหมู่</label>
+                            <select id="wish-category" class="w-full p-3 border border-purple-300 rounded-lg focus:ring-2 focus:ring-orange-500 bg-white/90 text-gray-900">
+                                <option value="health">🥇 สุขภาพดี</option>
+                                <option value="love">💕 ความรัก</option>
+                                <option value="success">🎯 ความสำเร็จ</option>
+                                <option value="environment">🌍 รักษ์โลก</option>
+                                <option value="peace">☮️ สันติภาพ</option>
+                            </select>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="releaseKrathong()" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg">
+                                สร้างกระทงฟรี ✨
+                            </button>
+                            <button onclick="showCustomKrathong()" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white py-3 rounded-lg font-semibold hover:from-orange-600 hover:to-amber-600 transition-all duration-300 shadow-lg">
+                                🎨 Custom Premium
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="glass-effect p-6 rounded-2xl card-hover border border-orange-300">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-orange-400 to-amber-500 rounded-full flex items-center justify-center text-white text-xl shadow-lg">🌱</div>
+                            <div>
+                                <h5 class="font-semibold text-white">ลดขยะในแม่น้ำ</h5>
+                                <p class="text-orange-300 font-bold text-2xl" id="waste-saved">12,847</p>
+                                <p class="text-sm text-purple-100">กระทงดิจิทัลที่ลอยแล้ว</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect p-6 rounded-2xl card-hover border border-purple-300">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xl shadow-lg">💧</div>
+                            <div>
+                                <h5 class="font-semibold text-white">รักษาแหล่งน้ำ</h5>
+                                <p class="text-purple-300 font-bold text-2xl">847</p>
+                                <p class="text-sm text-purple-100">แม่น้ำที่ได้รับการปกป้อง</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect p-6 rounded-2xl card-hover border border-pink-300">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-pink-500 to-orange-500 rounded-full flex items-center justify-center text-white text-xl shadow-lg">🤝</div>
+                            <div>
+                                <h5 class="font-semibold text-white">ชุมชนออนไลน์</h5>
+                                <p class="text-pink-300 font-bold text-2xl">45,623</p>
+                                <p class="text-sm text-purple-100">สมาชิกทั่วโลก</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community River Section -->
+    <section id="community-river" class="py-16 relative overflow-hidden bg-gradient-to-b from-slate-900 to-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-white mb-4">แม่น้ำกระทงชุมชน</h3>
+                <p class="text-purple-100 text-lg">ชมกระทงของเพื่อนๆ ที่กำลังลอยไปในแม่น้ำดิจิทัล</p>
+            </div>
+            
+            <div class="water-surface rounded-3xl p-8 relative h-96 mb-8" id="community-river-container">
+                <div class="water-ripples" id="community-ripples"></div>
+                <div class="water-ripples" id="community-ripples"></div>
+                <div class="absolute top-6 right-10 text-7xl opacity-60" style="filter: drop-shadow(0 0 25px rgba(253, 224, 71, 0.5)); animation: float 4s ease-in-out infinite;">🌕</div>
+                
+                <div id="community-krathongs" class="absolute inset-0"></div>
+                
+                <div class="absolute top-4 left-4 glass-effect rounded-lg p-3 text-white border border-purple-300">
+                    <div class="text-sm">กระทงที่ลอยอยู่</div>
+                    <div class="text-2xl font-bold" id="floating-count">24</div>
+                </div>
+                
+                <div class="absolute top-4 right-4 glass-effect rounded-lg p-3 text-white border border-orange-300">
+                    <div class="text-sm">คำอธิษฐานรวม</div>
+                    <div class="text-2xl font-bold" id="total-wishes">1,247</div>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="glass-effect rounded-2xl p-6 text-white border border-purple-300">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="text-3xl candle-flicker">🎎</div>
+                        <div>
+                            <h5 class="font-semibold">คุณสมใจ</h5>
+                            <p class="text-sm text-purple-100">เมื่อ 2 นาทีที่แล้ว</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-purple-100">"ขอให้ครอบครัวมีความสุขและสุขภาพแข็งแรง"</p>
+                    <div class="flex items-center justify-between mt-4">
+                        <span class="text-xs glass-effect px-2 py-1 rounded-full border border-orange-300">🥇 สุขภาพดี</span>
+                        <div class="flex items-center space-x-1">
+                            <span>❤️</span>
+                            <span class="text-sm">12</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-6 text-white border border-orange-300">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="text-3xl candle-flicker">🌸</div>
+                        <div>
+                            <h5 class="font-semibold">คุณมาลี</h5>
+                            <p class="text-sm text-purple-100">เมื่อ 5 นาทีที่แล้ว</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-purple-100">"ขอให้โลกใบนี้สีเขียวและสวยงามตลอดไป"</p>
+                    <div class="flex items-center justify-between mt-4">
+                        <span class="text-xs glass-effect px-2 py-1 rounded-full border border-purple-300">🌍 รักษ์โลก</span>
+                        <div class="flex items-center space-x-1">
+<span>❤️</span>
+                            <span class="text-sm">12</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-6 text-white border border-orange-300">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="text-3xl candle-flicker">🌸</div>
+                        <div>
+                            <h5 class="font-semibold">คุณมาลี</h5>
+                            <p class="text-sm text-purple-100">เมื่อ 5 นาทีที่แล้ว</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-purple-100">"ขอให้โลกใบนี้สีเขียวและสวยงามตลอดไป"</p>
+                    <div class="flex items-center justify-between mt-4">
+                        <span class="text-xs glass-effect px-2 py-1 rounded-full border border-purple-300">🌍 รักษ์โลก</span>
+                        <div class="flex items-center space-x-1">
+                            <span>❤️</span>
+                            <span class="text-sm">8</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-6 text-white border border-pink-300">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="text-3xl candle-flicker">🪷</div>
+                        <div>
+                            <h5 class="font-semibold">คุณดาว</h5>
+                            <p class="text-sm text-purple-100">เมื่อ 8 นาทีที่แล้ว</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-purple-100">"ขอให้ธุรกิจเจริญรุ่งเรืองและประสบความสำเร็จ"</p>
+                    <div class="flex items-center justify-between mt-4">
+                        <span class="text-xs glass-effect px-2 py-1 rounded-full border border-orange-300">🎯 ความสำเร็จ</span>
+                        <div class="flex items-center space-x-1">
+<span>❤️</span>
+                            <span class="text-sm">12</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-6 text-white border border-orange-300">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="text-3xl candle-flicker">🌸</div>
+                        <div>
+                            <h5 class="font-semibold">คุณมาลี</h5>
+                            <p class="text-sm text-purple-100">เมื่อ 5 นาทีที่แล้ว</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-purple-100">"ขอให้โลกใบนี้สีเขียวและสวยงามตลอดไป"</p>
+                    <div class="flex items-center justify-between mt-4">
+                        <span class="text-xs glass-effect px-2 py-1 rounded-full border border-purple-300">🌍 รักษ์โลก</span>
+                        <div class="flex items-center space-x-1">
+                            <span>❤️</span>
+                            <span class="text-sm">8</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-6 text-white border border-pink-300">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="text-3xl candle-flicker">🪷</div>
+                        <div>
+                            <h5 class="font-semibold">คุณดาว</h5>
+                            <p class="text-sm text-purple-100">เมื่อ 8 นาทีที่แล้ว</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-purple-100">"ขอให้ธุรกิจเจริญรุ่งเรืองและประสบความสำเร็จ"</p>
+                    <div class="flex items-center justify-between mt-4">
+                        <span class="text-xs glass-effect px-2 py-1 rounded-full border border-orange-300">🎯 ความสำเร็จ</span>
+                        <div class="flex items-center space-x-1">
+                            <span>❤️</span>
+                            <span class="text-sm">15</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Map Section -->
+    <section id="events" class="py-16 glass-effect">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-white mb-4">แผนที่กิจกรรมลอยกระทง</h3>
+                <p class="text-purple-100 text-lg">ค้นหาสถานที่ลอยกระทงที่เป็นมิตรกับสิ่งแวดล้อมใกล้คุณ</p>
+            </div>
+            
+            <div class="grid lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2">
+                    <div class="glass-effect rounded-2xl p-8 h-96 flex items-center justify-center border border-purple-300">
+                        <div class="text-center">
+                            <div class="text-6xl mb-4">🗺️</div>
+                            <p class="text-white text-lg">แผนที่แบบ Interactive</p>
+                            <p class="text-purple-100 text-sm mt-2">แสดงสถานที่จัดกิจกรรมทั่วประเทศ</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="glass-effect rounded-2xl p-6 card-hover border border-orange-300">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-orange-400 to-amber-500 rounded-full flex items-center justify-center text-white text-xl shadow-lg flex-shrink-0">📍</div>
+                            <div>
+                                <h5 class="font-semibold text-white">ทะเลสาบบึงแก่นนคร</h5>
+                                <p class="text-sm text-purple-100 mt-1">ขอนแก่น</p>
+                                <p class="text-xs text-orange-200 mt-2">⏰ 15 พ.ย. 2567 | 18:00-22:00</p>
+                                <div class="flex items-center mt-3 space-x-2">
+                                    <span class="text-xs glass-effect px-2 py-1 rounded-full border border-purple-300">🌱 กระทงธรรมชาติ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect rounded-2xl p-6 card-hover border border-purple-300">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xl shadow-lg flex-shrink-0">📍</div>
+                            <div>
+                                <h5 class="font-semibold text-white">แม่น้ำเจ้าพระยา</h5>
+                                <p class="text-sm text-purple-100 mt-1">กรุงเทพฯ</p>
+                                <p class="text-xs text-orange-200 mt-2">⏰ 15 พ.ย. 2567 | 17:00-23:00</p>
+                                <div class="flex items-center mt-3 space-x-2">
+                                    <span class="text-xs glass-effect px-2 py-1 rounded-full border border-orange-300">🎎 กระทงย่อยสลาย</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect rounded-2xl p-6 card-hover border border-pink-300">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-pink-500 to-orange-500 rounded-full flex items-center justify-center text-white text-xl shadow-lg flex-shrink-0">📍</div>
+                            <div>
+                                <h5 class="font-semibold text-white">แม่น้ำปิง</h5>
+                                <p class="text-sm text-purple-100 mt-1">เชียงใหม่</p>
+                                <p class="text-xs text-orange-200 mt-2">⏰ 14-16 พ.ย. 2567 | 18:00-23:00</p>
+                                <div class="flex items-center mt-3 space-x-2">
+                                    <span class="text-xs glass-effect px-2 py-1 rounded-full border border-purple-300">🏮 ประเพณียี่เป็ง</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wishes Wall Section -->
+    <section id="wishes" class="py-16 bg-gradient-to-b from-slate-800 to-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-white mb-4">ผนังคำอธิษฐาน</h3>
+                <p class="text-purple-100 text-lg">คำอธิษฐานและความปรารถนาจากทั่วทุกมุมโลก</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="glass-effect rounded-2xl p-6 card-hover border border-orange-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-3xl candle-flicker">🎎</div>
+                            <div>
+                                <h5 class="font-semibold text-white">คุณอรุณ</h5>
+                                <p class="text-xs text-purple-100">ขอนแก่น, ไทย</p>
+                            </div>
+                        </div>
+                        <span class="text-xs glass-effect px-2 py-1 rounded-full border border-purple-300">🥇 สุขภาพดี</span>
+                    </div>
+                    <p class="text-purple-100 text-sm mb-4">"ขอให้พ่อแม่มีสุขภาพแข็งแรง อายุยืนยาว ห่างไกลโรคภัย"</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-orange-200">15 พ.ย. 2567</span>
+                        <div class="flex items-center space-x-3">
+                            <button class="text-pink-300 hover:text-pink-400 transition-colors">❤️ 24</button>
+                            <button class="text-purple-300 hover:text-purple-400 transition-colors">🙏 12</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-6 card-hover border border-purple-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-3xl candle-flicker">🌸</div>
+                            <div>
+                                <h5 class="font-semibold text-white">Sophia Chen</h5>
+                                <p class="text-xs text-purple-100">Singapore</p>
+                            </div>
+                        </div>
+                        <span class="text-xs glass-effect px-2 py-1 rounded-full border border-orange-300">☮️ สันติภาพ</span>
+                    </div>
+                    <p class="text-purple-100 text-sm mb-4">"May peace and harmony prevail in our world 🕊️"</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-orange-200">15 Nov 2567</span>
+                        <div class="flex items-center space-x-3">
+                            <button class="text-pink-300 hover:text-pink-400 transition-colors">❤️ 89</button>
+                            <button class="text-purple-300 hover:text-purple-400 transition-colors">🙏 45</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-6 card-hover border border-pink-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-3xl candle-flicker">🪷</div>
+                            <div>
+                                <h5 class="font-semibold text-white">คุณวิไล</h5>
+                                <p class="text-xs text-purple-100">กรุงเทพฯ, ไทย</p>
+                            </div>
+                        </div>
+                        <span class="text-xs glass-effect px-2 py-1 rounded-full border border-purple-300">💕 ความรัก</span>
+                    </div>
+                    <p class="text-purple-100 text-sm mb-4">"ขอให้ครอบครัวมีความรักและความอบอุ่นตลอดไป 💖"</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-orange-200">15 พ.ย. 2567</span>
+                        <div class="flex items-center space-x-3">
+                            <button class="text-pink-300 hover:text-pink-400 transition-colors">❤️ 56</button>
+                            <button class="text-purple-300 hover:text-purple-400 transition-colors">🙏 28</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-6 card-hover border border-orange-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-3xl candle-flicker">🌺</div>
+                            <div>
+                                <h5 class="font-semibold text-white">Yuki Tanaka</h5>
+                                <p class="text-xs text-purple-100">Tokyo, Japan</p>
+                            </div>
+                        </div>
+                        <span class="text-xs glass-effect px-2 py-1 rounded-full border border-purple-300">🌍 รักษ์โลก</span>
+                    </div>
+                    <p class="text-purple-100 text-sm mb-4">"Let's protect our beautiful planet for future generations 🌏"</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-orange-200">15 Nov 2567</span>
+                        <div class="flex items-center space-x-3">
+                            <button class="text-pink-300 hover:text-pink-400 transition-colors">❤️ 127</button>
+                            <button class="text-purple-300 hover:text-purple-400 transition-colors">🙏 89</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-6 card-hover border border-purple-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-3xl candle-flicker">🎎</div>
+                            <div>
+                                <h5 class="font-semibold text-white">คุณสมชาย</h5>
+                                <p class="text-xs text-purple-100">เชียงใหม่, ไทย</p>
+                            </div>
+                        </div>
+                        <span class="text-xs glass-effect px-2 py-1 rounded-full border border-orange-300">🎯 ความสำเร็จ</span>
+                    </div>
+                    <p class="text-purple-100 text-sm mb-4">"ขอให้ธุรกิจเติบโตและพนักงานมีความสุขในการทำงาน"</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-orange-200">15 พ.ย. 2567</span>
+                        <div class="flex items-center space-x-3">
+                            <button class="text-pink-300 hover:text-pink-400 transition-colors">❤️ 42</button>
+                            <button class="text-purple-300 hover:text-purple-400 transition-colors">🙏 31</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-6 card-hover border border-pink-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-3xl candle-flicker">🌸</div>
+                            <div>
+                                <h5 class="font-semibold text-white">Maria Garcia</h5>
+                                <p class="text-xs text-purple-100">Barcelona, Spain</p>
+                            </div>
+                        </div>
+                        <span class="text-xs glass-effect px-2 py-1 rounded-full border border-purple-300">💕 ความรัก</span>
+                    </div>
+                    <p class="text-purple-100 text-sm mb-4">"Hoping to find my soulmate this year 💫"</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-orange-200">15 Nov 2567</span>
+                        <div class="flex items-center space-x-3">
+                            <button class="text-pink-300 hover:text-pink-400 transition-colors">❤️ 67</button>
+                            <button class="text-purple-300 hover:text-purple-400 transition-colors">🙏 34</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    ดูคำอธิษฐานทั้งหมด (1,247) →
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-16 glass-effect">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-white mb-4">แกลเลอรี่กระทงสร้างสรรค์</h3>
+                <p class="text-purple-100 text-lg">ชมผลงานกระทงที่สวยงามจากชุมชนของเรา</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div class="glass-effect rounded-2xl p-4 card-hover border border-orange-300">
+                    <div class="bg-gradient-to-br from-yellow-200 to-orange-300 rounded-xl h-40 flex items-center justify-center text-6xl candle-flicker mb-3">
+                        🎎
+                    </div>
+                    <h5 class="text-white font-semibold text-sm">Classic Lotus</h5>
+                    <p class="text-purple-100 text-xs">by คุณสมใจ</p>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-4 card-hover border border-purple-300">
+                    <div class="bg-gradient-to-br from-purple-200 to-pink-300 rounded-xl h-40 flex items-center justify-center text-6xl candle-flicker mb-3">
+                        🪷
+                    </div>
+                    <h5 class="text-white font-semibold text-sm">Sacred Lotus</h5>
+                    <p class="text-purple-100 text-xs">by คุณดาว</p>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-4 card-hover border border-pink-300">
+                    <div class="bg-gradient-to-br from-pink-200 to-orange-300 rounded-xl h-40 flex items-center justify-center text-6xl candle-flicker mb-3">
+                        🌸
+                    </div>
+                    <h5 class="text-white font-semibold text-sm">Cherry Blossom</h5>
+                    <p class="text-purple-100 text-xs">by Yuki</p>
+                </div>
+                
+                <div class="glass-effect rounded-2xl p-4 card-hover border border-orange-300">
+                    <div class="bg-gradient-to-br from-orange-200 to-amber-300 rounded-xl h-40 flex items-center justify-center text-6xl candle-flicker mb-3">
+                        🌺
+                    </div>
+                    <h5 class="text-white font-semibold text-sm">Tropical Bloom</h5>
+                    <p class="text-purple-100 text-xs">by Maria</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Donation Section -->
+    <section class="py-16 bg-gradient-to-b from-slate-900 to-cyan-900">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass-effect rounded-3xl p-12 text-center border border-orange-300">
+                <div class="text-6xl mb-6">🌱</div>
+                <h3 class="text-3xl font-bold text-white mb-4">ร่วมบริจาคเพื่อรักษ์โลก</h3>
+                <p class="text-purple-100 text-lg mb-8 max-w-2xl mx-auto">
+                    ร่วมสนับสนุนโครงการอนุรักษ์แหล่งน้ำและสิ่งแวดล้อม ทุกยอดบริจาคจะนำไปปลูกต้นไม้และทำความสะอาดแม่น้ำ
+                </p>
+                
+                <div class="grid md:grid-cols-3 gap-4 mb-8">
+                    <div class="glass-effect rounded-2xl p-6 border border-purple-300">
+                        <div class="text-3xl mb-2">🌳</div>
+                        <h5 class="font-semibold text-white mb-2">100 บาท</h5>
+                        <p class="text-sm text-purple-100">ปลูกต้นไม้ 1 ต้น</p>
+                    </div>
+                    <div class="glass-effect rounded-2xl p-6 border border-orange-300">
+                        <div class="text-3xl mb-2">💧</div>
+                        <h5 class="font-semibold text-white mb-2">500 บาท</h5>
+                        <p class="text-sm text-purple-100">ทำความสะอาดแม่น้ำ 10 ม.</p>
+                    </div>
+                    <div class="glass-effect rounded-2xl p-6 border border-pink-300">
+                        <div class="text-3xl mb-2">🌏</div>
+                        <h5 class="font-semibold text-white mb-2">1,000 บาท</h5>
+                        <p class="text-sm text-purple-100">สนับสนุนโครงการรักษ์โลก</p>
+                    </div>
+                </div>
+                
+                <button class="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-12 py-4 rounded-full font-semibold text-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    💚 บริจาคเดี๋ยวนี้
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass-effect py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-r from-purple-600 to-orange-500 rounded-full flex items-center justify-center text-white text-xl">🎎</div>
+                        <h4 class="text-white font-bold text-lg">E - Krathong</h4>
+                    </div>
+                    <p class="text-purple-100 text-sm">ลอยกระทงดิจิทัล รักษาสิ่งแวดล้อม เชื่อมโยงคนทั่วโลก</p>
+                </div>
+                
+                <div>
+                    <h5 class="text-white font-semibold mb-4">เมนูหลัก</h5>
+                    <ul class="space-y-2 text-purple-100 text-sm">
+                        <li><a href="#digital-krathong" class="hover:text-orange-300 transition-colors">ลอยกระทงดิจิทัล</a></li>
+                        <li><a href="#community-river" class="hover:text-orange-300 transition-colors">แม่น้ำชุมชน</a></li>
+                        <li><a href="#events" class="hover:text-orange-300 transition-colors">แผนที่กิจกรรม</a></li>
+                        <li><a href="#wishes" class="hover:text-orange-300 transition-colors">ผนังคำอธิษฐาน</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="text-white font-semibold mb-4">เกี่ยวกับเรา</h5>
+                    <ul class="space-y-2 text-purple-100 text-sm">
+                        <li><a href="#" class="hover:text-orange-300 transition-colors">ทีมงาน KKU SIDS</a></li>
+                        <li><a href="#" class="hover:text-orange-300 transition-colors">วิสัยทัศน์</a></li>
+                        <li><a href="#" class="hover:text-orange-300 transition-colors">ติดต่อเรา</a></li>
+                        <li><a href="#" class="hover:text-orange-300 transition-colors">ร่วมงานกับเรา</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="text-white font-semibold mb-4">ติดตามเรา</h5>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform">
+                            <span>📘</span>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gradient-to-r from-pink-600 to-orange-500 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform">
+                            <span>📷</span>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gradient-to-r from-orange-500 to-amber-500 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform">
+                            <span>🐦</span>
+                        </a>
+                    </div>
+                    <div class="mt-6 glass-effect rounded-lg p-3 border border-purple-300">
+                        <p class="text-xs text-purple-100 mb-1">จำนวนผู้เข้าชมวันนี้</p>
+                        <p class="text-white font-bold text-xl">8,472</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-purple-300 pt-8 text-center">
+                <p class="text-purple-100 text-sm">
+                    © 2567 E-Krathong by KKU SIDS. สงวนลิขสิทธิ์. | 
+                    <a href="#" class="text-orange-300 hover:text-orange-400 transition-colors">นโยบายความเป็นส่วนตัว</a> | 
+                    <a href="#" class="text-orange-300 hover:text-orange-400 transition-colors">เงื่อนไขการใช้งาน</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+    <!-- Custom Premium Modal -->
+    <div id="customPremiumModal" class="modal">
+        <div class="modal-content glass-effect">
+            <span class="close-modal" onclick="closeCustomModal()">&times;</span>
+            
+            <div class="text-center mb-8">
+                <h3 class="text-3xl font-bold text-white mb-2">🎨 Custom Premium Krathong</h3>
+                <p class="text-purple-100">ออกแบบกระทงพิเศษของคุณเอง</p>
+            </div>
+            
+            <div class="krathong-customizer">
+                <!-- Preview Section -->
+                <div>
+                    <h4 class="text-xl font-semibold text-white mb-4">ตัวอย่างกระทง</h4>
+                    <div class="water-surface p-8 rounded-2xl mb-4 relative h-80 flex items-center justify-center">
+                        <div id="custom-krathong-preview" class="w-40 h-40 rounded-full flex items-center justify-center text-6xl candle-glow candle-flicker shadow-2xl transition-all duration-300" style="background: linear-gradient(135deg, #FEF3C7, #FCD34D);">
+                            🎎
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect rounded-lg p-4 border border-purple-300">
+                        <div class="text-sm text-white mb-2">💎 ราคา Premium</div>
+                        <div class="text-3xl font-bold text-orange-300">99 บาท</div>
+                        <div class="text-xs text-purple-100 mt-1">รวมเอฟเฟกต์พิเศษและบันทึกถาวร</div>
+                    </div>
+                </div>
+                
+                <!-- Customization Options -->
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-white mb-3">เลือกสไตล์กระทง</label>
+                        <div class="grid grid-cols-4 gap-2">
+                            <button onclick="selectCustomKrathong('🎎', this)" class="custom-krathong-btn p-3 text-4xl bg-white/20 rounded-lg hover:bg-white/30 border-2 border-white transition-all">🎎</button>
+                            <button onclick="selectCustomKrathong('🪷', this)" class="custom-krathong-btn p-3 text-4xl bg-white/20 rounded-lg hover:bg-white/30 border-2 border-transparent transition-all">🪷</button>
+                            <button onclick="selectCustomKrathong('🌸', this)" class="custom-krathong-btn p-3 text-4xl bg-white/20 rounded-lg hover:bg-white/30 border-2 border-transparent transition-all">🌸</button>
+                            <button onclick="selectCustomKrathong('🌺', this)" class="custom-krathong-btn p-3 text-4xl bg-white/20 rounded-lg hover:bg-white/30 border-2 border-transparent transition-all">🌺</button>
+                            <button onclick="selectCustomKrathong('🏵️', this)" class="custom-krathong-btn p-3 text-4xl bg-white/20 rounded-lg hover:bg-white/30 border-2 border-transparent transition-all">🏵️</button>
+                            <button onclick="selectCustomKrathong('🌼', this)" class="custom-krathong-btn p-3 text-4xl bg-white/20 rounded-lg hover:bg-white/30 border-2 border-transparent transition-all">🌼</button>
+                            <button onclick="selectCustomKrathong('🌻', this)" class="custom-krathong-btn p-3 text-4xl bg-white/20 rounded-lg hover:bg-white/30 border-2 border-transparent transition-all">🌻</button>
+                            <button onclick="selectCustomKrathong('🌷', this)" class="custom-krathong-btn p-3 text-4xl bg-white/20 rounded-lg hover:bg-white/30 border-2 border-transparent transition-all">🌷</button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-white mb-3">สีพื้นหลังกระทง</label>
+                        <div class="color-picker-group">
+                            <div class="color-option selected" style="background: linear-gradient(135deg, #FEF3C7, #FCD34D);" onclick="selectColor(this, 'linear-gradient(135deg, #FEF3C7, #FCD34D)')"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #FBCFE8, #F9A8D4);" onclick="selectColor(this, 'linear-gradient(135deg, #FBCFE8, #F9A8D4)')"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #DDD6FE, #C4B5FD);" onclick="selectColor(this, 'linear-gradient(135deg, #DDD6FE, #C4B5FD)')"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #BFDBFE, #93C5FD);" onclick="selectColor(this, 'linear-gradient(135deg, #BFDBFE, #93C5FD)')"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #BBF7D0, #86EFAC);" onclick="selectColor(this, 'linear-gradient(135deg, #BBF7D0, #86EFAC)')"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #FED7AA, #FDBA74);" onclick="selectColor(this, 'linear-gradient(135deg, #FED7AA, #FDBA74)')"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-white mb-2">เอฟเฟกต์พิเศษ</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center space-x-3 glass-effect p-3 rounded-lg cursor-pointer hover:bg-white/10">
+                                <input type="checkbox" id="effect-glow" checked class="w-5 h-5">
+                                <span class="text-white">✨ เรืองแสง</span>
+                            </label>
+                            <label class="flex items-center space-x-3 glass-effect p-3 rounded-lg cursor-pointer hover:bg-white/10">
+                                <input type="checkbox" id="effect-sparkle" checked class="w-5 h-5">
+                                <span class="text-white">💫 ประกายดาว</span>
+                            </label>
+                            <label class="flex items-center space-x-3 glass-effect p-3 rounded-lg cursor-pointer hover:bg-white/10">
+                                <input type="checkbox" id="effect-rainbow" class="w-5 h-5">
+                                <span class="text-white">🌈 รุ้งกรรม</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-white mb-2">ชื่อเจ้าของกระทง</label>
+                        <input type="text" id="custom-owner-name" placeholder="ใส่ชื่อของคุณ..." class="w-full p-3 border border-purple-300 rounded-lg focus:ring-2 focus:ring-orange-500 bg-white/90 text-gray-900">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-white mb-2">คำอธิษฐาน/ข้อความ</label>
+                        <textarea id="custom-wish-text" placeholder="เขียนคำอธิษฐานหรือความปรารถนาของคุณ..." class="w-full p-3 border border-purple-300 rounded-lg focus:ring-2 focus:ring-orange-500 bg-white/90 text-gray-900" rows="3"></textarea>
+                    </div>
+
+                    <div>
+                            <label class="block text-sm font-medium text-white mb-2">หมวดหมู่</label>
+                            <select id="premium-wish-category" class="w-full p-3 border border-purple-300 rounded-lg focus:ring-2 focus:ring-orange-500 bg-white/90 text-gray-900">
+                                <option value="health">🥇 สุขภาพดี</option>
+                                <option value="love">💕 ความรัก</option>
+                                <option value="success">🎯 ความสำเร็จ</option>
+                                <option value="environment">🌍 รักษ์โลก</option>
+                                <option value="peace">☮️ สันติภาพ</option>
+                            </select>
+                        </div>
+                    
+                    <button onclick="releasePremiumKrathong()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white py-4 rounded-lg font-semibold text-lg transition-all duration-300 shadow-lg">
+                        🎨 สร้างและลอยกระทง Premium (99฿)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let customKrathongEmoji = '🎎';
+        let customKrathongColor = 'linear-gradient(135deg, #FEF3C7, #FCD34D)';
+        let currentKrathong = '🎎';
+        let wasteCount = 12847;
+        let communityCount = 45623;
+        let userKrathongs = [];
+        let floatingKrathongs = [];
+
+        window.onload = function() {
+            addUserKrathongToCommunity('🎎', 'คุณสมใจ', 'ขอให้ครอบครัวมีความสุขและสุขภาพแข็งแรง', 'health', false);
+            addUserKrathongToCommunity('🌸', 'คุณมาลี', 'ขอให้โลกใบนี้สีเขียวและสวยงามตลอดไป', 'environment', false);
+            addUserKrathongToCommunity('🪷', 'คุณดาว', 'ขอให้ธุรกิจเจริญรุ่งเรืองและประสบความสำเร็จ', 'success', false);
+            };
+        
+        // Add user krathong to community river
+        function addUserKrathongToCommunity(krathongEmoji, ownerName, wishText, category, isPremium = false) {
+            const container = document.getElementById('community-krathongs');
+            const krathong = document.createElement('div');
+            const topPosition = 20 + (Math.random() * 60);
+            const animationDuration = 15 + Math.random() * 10;
+            const animationDelay = Math.random() * 2;
+            
+            // Category icons
+            const categoryIcons = {
+                health: '🥇',
+                love: '💕',
+                success: '🎯',
+                environment: '🌍',
+                peace: '☮️'
+            };
+            
+            // Category names
+            const categoryNames = {
+                health: 'สุขภาพดี',
+                love: 'ความรัก',
+                success: 'ความสำเร็จ',
+                environment: 'รักษ์โลก',
+                peace: 'สันติภาพ'
+            };
+            
+            const categoryIcon = categoryIcons[category] || '🥇';
+            const categoryName = categoryNames[category] || 'สุขภาพดี';
+            
+            krathong.className = 'community-krathong';
+            krathong.style.top = `${topPosition}%`;
+            krathong.style.animationDuration = `${animationDuration}s`;
+            krathong.style.animationDelay = `${animationDelay}s`;
+            
+            const premiumBadge = isPremium ? '<span class="absolute -top-1 -right-1 text-xs">💎</span>' : '';
+            
+            krathong.innerHTML = `
+                <div class="relative bg-gradient-to-br from-yellow-200 to-orange-300 w-16 h-16 rounded-full flex items-center justify-center text-3xl candle-glow candle-flicker shadow-lg">
+                    ${krathongEmoji}
+                    ${premiumBadge}
+                </div>
+                <div class="krathong-tooltip">
+                    <div class="font-semibold">${ownerName}${isPremium ? ' 💎' : ''}</div>
+                    <div class="text-xs">"${wishText.substring(0, 30)}${wishText.length > 30 ? '...' : ''}"</div>
+                    <div class="text-xs mt-1">${categoryIcon} ${categoryName}</div>
+                </div>
+            `;
+            
+            container.appendChild(krathong);
+            userKrathongs.push(krathong);
+            
+            // Remove after animation completes
+            setTimeout(() => {
+                if (krathong.parentNode) {
+                    container.removeChild(krathong);
+                    const index = userKrathongs.indexOf(krathong);
+                    if (index > -1) {
+                        userKrathongs.splice(index, 1);
+                    }
+                }
+            }, (animationDuration + animationDelay) * 1000);
+        }
+        
+        // Add krathong card to community blog section
+        function addKrathongToWishesWall(krathongEmoji, ownerName, wishText, category, isPremium = false) {
+            const wishesContainer = document.querySelector('#wishes .grid');
+            
+            if (!wishesContainer) {
+                console.error('Wishes container not found');
+                return;
+            }
+            
+            // Category icons and names
+            const categoryIcons = {
+                health: '🥇',
+                love: '💕',
+                success: '🎯',
+                environment: '🌍',
+                peace: '☮️'
+            };
+            
+            const categoryNames = {
+                health: 'สุขภาพดี',
+                love: 'ความรัก',
+                success: 'ความสำเร็จ',
+                environment: 'รักษ์โลก',
+                peace: 'สันติภาพ'
+            };
+            
+            const categoryIcon = categoryIcons[category] || '🥇';
+            const categoryName = categoryNames[category] || 'สุขภาพดี';
+            
+            // Border colors based on category
+            const borderColors = {
+                health: 'border-orange-300',
+                love: 'border-pink-300',
+                success: 'border-purple-300',
+                environment: 'border-green-300',
+                peace: 'border-blue-300'
+            };
+            
+            const borderColor = borderColors[category] || 'border-orange-300';
+            
+            const premiumBadge = isPremium ? '<span class="ml-1">💎</span>' : '';
+            
+            const newCard = document.createElement('div');
+            newCard.className = `glass-effect rounded-2xl p-6 card-hover border ${borderColor}`;
+            newCard.style.animation = 'slideInNew 0.6s ease-out';
+            
+            // Get current date in Thai format
+            const now = new Date();
+            const thaiDate = now.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
+            
+            newCard.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="text-3xl candle-flicker">${krathongEmoji}</div>
+                        <div>
+                            <h5 class="font-semibold text-white">${ownerName}${premiumBadge}</h5>
+                            <p class="text-xs text-purple-100">เพิ่งลอยไป</p>
+                        </div>
+                    </div>
+                    <span class="text-xs glass-effect px-2 py-1 rounded-full border ${borderColor}">${categoryIcon} ${categoryName}</span>
+                </div>
+                <p class="text-purple-100 text-sm mb-4">"${wishText}"</p>
+                <div class="flex items-center justify-between text-sm">
+                    <span class="text-orange-200">${thaiDate}</span>
+                    <div class="flex items-center space-x-3">
+                        <button class="text-pink-300 hover:text-pink-400 transition-colors">❤️ 0</button>
+                        <button class="text-purple-300 hover:text-purple-400 transition-colors">🙏 0</button>
+                    </div>
+                </div>
+            `;
+            
+            // Insert at the beginning of the grid
+            wishesContainer.insertBefore(newCard, wishesContainer.firstChild);
+            
+            // Scroll to wishes section smoothly
+            setTimeout(() => {
+                document.querySelector('#wishes').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'nearest' 
+                });
+            }, 500);
+        }
+            
+            // Category icons and names
+            const categoryIcons = {
+                health: '🥇',
+                love: '💕',
+                success: '🎯',
+                environment: '🌍',
+                peace: '☮️'
+            };
+            
+            const categoryNames = {
+                health: 'สุขภาพดี',
+                love: 'ความรัก',
+                success: 'ความสำเร็จ',
+                environment: 'รักษ์โลก',
+                peace: 'สันติภาพ'
+            };
+            
+            const categoryIcon = categoryIcons[category] || '🥇';
+            const categoryName = categoryNames[category] || 'สุขภาพดี';
+            
+            // Border colors based on category
+            const borderColors = {
+                health: 'border-orange-300',
+                love: 'border-pink-300',
+                success: 'border-purple-300',
+                environment: 'border-green-300',
+                peace: 'border-blue-300'
+            };
+            
+            const borderColor = borderColors[category] || 'border-orange-300';
+            
+            const premiumBadge = isPremium ? '<span class="ml-1">💎</span>' : '';
+            
+            const newCard = document.createElement('div');
+            newCard.className = `glass-effect rounded-2xl p-6 card-hover border ${borderColor} animate-slideIn`;
+            newCard.style.animation = 'slideIn 0.5s ease-out';
+            
+            // Get current date in Thai format
+            const now = new Date();
+            const thaiDate = now.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
+            
+            newCard.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="text-3xl candle-flicker">${krathongEmoji}</div>
+                        <div>
+                            <h5 class="font-semibold text-white">${ownerName}${premiumBadge}</h5>
+                            <p class="text-xs text-purple-100">เพิ่งลอยไป</p>
+                        </div>
+                    </div>
+                    <span class="text-xs glass-effect px-2 py-1 rounded-full border ${borderColor}">${categoryIcon} ${categoryName}</span>
+                </div>
+                <p class="text-purple-100 text-sm mb-4">"${wishText}"</p>
+                <div class="flex items-center justify-between text-sm">
+                    <span class="text-orange-200">${thaiDate}</span>
+                    <div class="flex items-center space-x-3">
+                        <button class="text-pink-300 hover:text-pink-400 transition-colors">❤️ 0</button>
+                        <button class="text-purple-300 hover:text-purple-400 transition-colors">🙏 0</button>
+                    </div>
+                </div>
+            `;
+            
+            // Add animation style if not exists
+            if (!document.querySelector('#slideInStyle')) {
+                const style = document.createElement('style');
+                style.id = 'slideInStyle';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from {
+                            opacity: 0;
+                            transform: translateY(20px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // Insert at the beginning of the grid
+            wishesContainer.insertBefore(newCard, wishesContainer.firstChild);
+
+        // Initialize community krathongs
+        function initCommunityKrathongs() {
+    const container = document.getElementById('community-krathongs');
+    const krathongTypes = ['🎎', '🪷', '🌸', '🌺'];
+    const names = ['สมใจ', 'มาลี', 'ดาว', 'Yuki', 'Maria', 'Sophia'];
+    const wishes = [
+        'ขอให้มีความสุข',
+        'สุขภาพแข็งแรง',
+        'รักษ์โลก',
+        'Peace & Love',
+        'Success',
+        'Family'
+    ];
+    
+    for (let i = 1; i <= 5; i++) {
+        const krathong = document.createElement('div');
+        const randomKrathong = krathongTypes[Math.floor(Math.random() * krathongTypes.length)];
+        const randomName = names[Math.floor(Math.random() * names.length)];
+        const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
+        const topPosition = 20 + (Math.random() * 60);
+        
+        // **บรรทัดที่แก้ไข/เพิ่มเติม: เพิ่มคลาสลอย**
+        krathong.className = `community-krathong community-krathong-${i} krathong-float`;
+        
+        krathong.style.top = `${topPosition}%`;
+        krathong.innerHTML = `
+            <div class="bg-gradient-to-br from-yellow-200 to-orange-300 w-16 h-16 rounded-full flex items-center justify-center text-3xl candle-glow candle-flicker shadow-lg">
+                ${randomKrathong}
+            </div>
+            <div class="krathong-tooltip">
+                <div class="font-semibold">${randomName}</div>
+                <div class="text-xs">"${randomWish}"</div>
+            </div>
+        `;
+        container.appendChild(krathong);
+    }
+}
+        
+        // Select krathong
+        function selectKrathong(emoji) {
+            currentKrathong = emoji;
+            const preview = document.getElementById('krathong-preview');
+            preview.textContent = emoji;
+            
+            // Add selection animation
+            preview.style.transform = 'translate(-50%, -50%) scale(1.2)';
+            setTimeout(() => {
+                preview.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 300);
+        }
+        
+        // Release krathong
+            function releaseKrathong() {
+            const name = document.getElementById('owner-name').value || 'ผู้ใช้งาน';
+            const wish = document.getElementById('wish-text').value || 'ขอให้มีความสุข';
+            const category = document.getElementById('wish-category').value;
+            
+            // Create floating krathong
+            const container = document.getElementById('floating-krathongs');
+            const krathong = document.createElement('div');
+            const preview = document.getElementById('krathong-preview');
+            
+            krathong.className = 'absolute';
+            krathong.style.left = '50%';
+            krathong.style.top = '50%';
+            krathong.style.transform = 'translate(-50%, -50%)';
+            krathong.style.transition = 'all 2s ease-out';
+            krathong.innerHTML = `
+                <div class="bg-gradient-to-br from-yellow-200 to-orange-300 w-32 h-32 rounded-full flex items-center justify-center text-4xl candle-glow candle-flicker shadow-2xl">
+                    ${currentKrathong}
+                </div>
+            `;
+            container.appendChild(krathong);
+            
+            // Hide preview temporarily
+            preview.style.opacity = '0';
+            
+            // Animate float away
+            setTimeout(() => {
+                krathong.style.transform = 'translate(-50%, -150%) scale(0.5)';
+                krathong.style.opacity = '0';
+            }, 100);
+            
+            // Create ripple effect
+            createRipple();
+            
+            // Remove krathong and show preview again
+            setTimeout(() => {
+                container.removeChild(krathong);
+                preview.style.opacity = '1';
+                
+                // Update counters
+                wasteCount++;
+                communityCount++;
+                updateCounters();
+                
+                const category = document.getElementById('wish-category')
+                ? document.getElementById('wish-category').value
+                : 'success';
+
+                // Add to community river and wishes wall
+                addUserKrathongToCommunity(currentKrathong, name, wish, wish-category, false);
+                addKrathongToWishesWall(currentKrathong, name, wish, wish-category, false);
+                
+                // Show notification
+                showNotification(name, wish);
+                
+                // Clear input fields
+                document.getElementById('owner-name').value = '';
+                document.getElementById('wish-text').value = '';
+            }, 2100);
+        }
+        
+        // Create ripple effect
+        function createRipple() {
+            const container = document.getElementById('ripples-container');
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            ripple.style.left = '50%';
+            ripple.style.top = '50%';
+            ripple.style.transform = 'translate(-50%, -50%)';
+            container.appendChild(ripple);
+            
+            setTimeout(() => {
+                container.removeChild(ripple);
+            }, 2000);
+        }
+        
+        // Show notification
+        function showNotification(name, wish) {
+            const notification = document.createElement('div');
+            notification.className = 'floating-notification';
+            notification.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <div class="text-3xl">${currentKrathong}</div>
+                    <div>
+                        <h5 class="font-semibold text-purple-600">กระทงของ${name}</h5>
+                        <p class="text-sm text-gray-600">"${wish.substring(0, 30)}${wish.length > 30 ? '...' : ''}"</p>
+                        <p class="text-xs text-green-600 mt-1">✅ ลอยสำเร็จแล้ว!</p>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    document.body.removeChild(notification);
+                }
+            }, 3500);
+        }
+        
+        // Update counters
+        function updateCounters() {
+            document.getElementById('waste-saved').textContent = wasteCount.toLocaleString();
+            document.getElementById('nav-waste-count').textContent = wasteCount.toLocaleString();
+            document.getElementById('nav-community-count').textContent = communityCount.toLocaleString();
+        }
+        
+        // Show digital krathong section
+        function showDigitalKrathong() {
+            document.getElementById('digital-krathong').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Show donation section
+        function showDonation() {
+            document.querySelector('section:has(.text-6xl.mb-6)').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Show custom krathong
+        // 🔧 ฟังก์ชันเปิด/ปิด Modal Premium
+        function showCustomKrathong() {
+        document.getElementById('customPremiumModal').classList.add('active');
+        }
+
+        function closeCustomModal() {
+        document.getElementById('customPremiumModal').classList.remove('active');
+        }
+        
+        function selectCustomKrathong(emoji, button) {
+            customKrathongEmoji = emoji;
+            document.getElementById('custom-krathong-preview').textContent = emoji;
+            
+            // Update button selection
+            document.querySelectorAll('.custom-krathong-btn').forEach(btn => {
+                btn.classList.remove('border-white');
+                btn.classList.add('border-transparent');
+            });
+            button.classList.remove('border-transparent');
+            button.classList.add('border-white');
+        }
+        
+        function selectColor(element, gradient) {
+            customKrathongColor = gradient;
+            document.getElementById('custom-krathong-preview').style.background = gradient;
+            
+            // Update color selection
+            document.querySelectorAll('.color-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+        
+        function releasePremiumKrathong() {
+            const name = document.getElementById('custom-owner-name').value || 'ผู้ใช้งาน Premium';
+            const wish = document.getElementById('custom-wish-text').value || 'ขอให้มีความสุข';
+            const category = 'success'; // Default category for premium
+            
+            // Create floating krathong animation
+            const container = document.getElementById('floating-krathongs');
+            const krathong = document.createElement('div');
+            const preview = document.getElementById('krathong-preview');
+            
+            krathong.className = 'absolute';
+            krathong.style.left = '50%';
+            krathong.style.top = '50%';
+            krathong.style.transform = 'translate(-50%, -50%)';
+            krathong.style.transition = 'all 2s ease-out';
+            krathong.innerHTML = `
+                <div class="w-32 h-32 rounded-full flex items-center justify-center text-4xl candle-glow candle-flicker shadow-2xl relative" style="background: ${customKrathongColor}">
+                    ${customKrathongEmoji}
+                    <span class="absolute -top-2 -right-2 text-2xl">💎</span>
+                </div>
+            `;
+            container.appendChild(krathong);
+            
+            // Hide preview temporarily
+            preview.style.opacity = '0';
+            
+            // Animate float away
+            setTimeout(() => {
+                krathong.style.transform = 'translate(-50%, -150%) scale(0.5)';
+                krathong.style.opacity = '0';
+            }, 100);
+            
+            // Create ripple effect
+            createRipple();
+            
+            // Remove krathong and show preview again
+            setTimeout(() => {
+                container.removeChild(krathong);
+                preview.style.opacity = '1';
+                
+                // Update counters
+                wasteCount++;
+                communityCount++;
+                updateCounters();
+                
+                const categorySelect = document.getElementById('premium-wish-category');
+                const category = categorySelect ? categorySelect.value : 'success';
+                // Add to community river and wishes wall (with premium flag)
+                addUserKrathongToCommunity(customKrathongEmoji, name, wish, category, true);
+                addKrathongToWishesWall(customKrathongEmoji, name, wish, category, true);
+                
+                // Show notification
+                showNotification(name + ' 💎', wish);
+                
+                // Clear input fields
+                document.getElementById('custom-owner-name').value = '';
+                document.getElementById('custom-wish-text').value = '';
+            }, 2100);
+            
+            // Close modal
+            closeCustomModal();
+            
+            // Show success message
+            setTimeout(() => {
+                alert('🎉 ลอยกระทง Premium สำเร็จ!\n\nกระทงของคุณได้ถูกบันทึกและแสดงในแม่น้ำชุมชนแล้ว\n\n✨ ขอบคุณที่สนับสนุนโครงการรักษ์โลก!');
+            }, 2500);
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('customPremiumModal');
+            if (event.target == modal) {
+                closeCustomModal();
+            }
+        }
+        
+        // Add water click effect
+        document.getElementById('water-container').addEventListener('click', function(e) {
+            if (e.target.id !== 'release-btn' && !e.target.closest('#release-btn')) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const ripple = document.createElement('div');
+                ripple.className = 'ripple';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                document.getElementById('ripples-container').appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 2000);
+            }
+        });
+        
+        // Random counter updates
+        setInterval(() => {
+            wasteCount += Math.floor(Math.random() * 3);
+            communityCount += Math.floor(Math.random() * 5);
+            updateCounters();
+            
+            // Update floating count
+            const floatingCount = 20 + Math.floor(Math.random() * 10);
+            document.getElementById('floating-count').textContent = floatingCount;
+            
+            // Update total wishes
+            const totalWishes = 1247 + Math.floor(Math.random() * 20);
+            document.getElementById('total-wishes').textContent = totalWishes.toLocaleString();
+        }, 5000);
+        
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initCommunityKrathongs();
+            updateCounters();
+        });
+        
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+        
+    </script>
+</body>
+</html>
